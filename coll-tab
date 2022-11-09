@@ -1,0 +1,116 @@
+<div class=" section-{{ section.id }}-padding">
+  <div  class="tabconatainer ">
+    <div class="page-widthf">
+      <h2 class="head-main">{{ section.settings.head }}</h2>
+      <div class="tab-customize">
+      
+        {% for block in section.blocks%}
+        
+          <h3 class="tablinks-cus" tab="{{ forloop.index }}" onclick="openTab(event, 'tab-{{ forloop.index }}')" {% if forloop.index == 1 %}id="tab-cus-active"{% endif %} >{{ block.settings.title}}</h3>
+        
+        {% endfor %}
+      
+      </div>
+      <!-- Tab content -->
+      <div class="tab_content">
+        <div class=" page-width">
+
+          
+          {% for block in section.blocks%}
+
+            <div id="tab-{{ forloop.index }}" class="tabcontent-cus page-width" {% if forloop.index == 1 %}style="display: block;"{% endif %}>
+        {% assign count = 0 %}
+              {%- for link in block.settings.coll.links -%}
+
+              {% for collection in collections %}
+                      
+              {% assign collection_url = link.url | remove: '/collections/' %}
+             
+              {% if collection.url contains collection_url %}
+                
+              {% assign count = count | plus: 1 %}
+              {% cycle '<div class="grid grid--3-col-desktop grid--2-col-tablet-down">','','','<div class="grid grid--3-col-desktop grid--2-col-tablet-down new-center">','' %}
+ 	          
+              <div class="main-div grid__item">
+                 <a href="{{ collection.url }}" class="head-tab" >
+                <div class="image">
+                  <img src="{{ collection.image | img_url:'400x' }}">
+                </div>
+                <h3 class="head-tab">  
+                 {{ collection.title }}  </a>
+                </h3>
+               
+              </div>
+
+              {% cycle '','','</div>','','</div>' %}
+
+              {% endif %}
+               
+              {% endfor %}
+              
+                {% endfor %}
+              {% assign total_count_5 = count | modulo: 5 %}
+    
+               {% assign total_count_3 = count | modulo: 3 %}
+                   
+               {% if total_count_5 != 0 or total_count_3 != 0  %}
+               </div>
+               {% endif %}
+              
+            </div>
+          
+          {% endfor %}
+          
+        </div>
+      </div> 
+      
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Categories Tab",
+  "tag": "section",
+  "class": "Custom Categories",
+  	"settings": [
+    {
+      "type": "text",
+      "id": "head",
+      "label": "heading"
+    }
+  ],
+ 
+  "blocks": [
+  {
+     "name": "Tab Heading",
+     "type": "text",
+     "settings": [
+       {
+          "type": "text",
+          "id": "title",
+          "label":"Heading"
+        },
+        {
+          "type": "link_list",
+          "id": "coll",
+          "label":"Navigation"
+        }
+      ]
+         }
+    
+  ],
+ "presets": [
+     {
+       "name": "Custom Categories Tab"
+}
+]
+ }
+{% endschema %}
+
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}
